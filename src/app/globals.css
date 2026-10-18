@@ -77,6 +77,29 @@ body {
   animation-play-state: paused;
 }
 
+/* Up and Down Jiggly Baby Animation */
+@keyframes jiggleBaby {
+  0%, 100% {
+    transform: translateY(0px) scale(1, 1) rotate(0deg);
+  }
+  20% {
+    transform: translateY(-16px) scale(0.96, 1.06) rotate(2deg);
+  }
+  40% {
+    transform: translateY(3px) scale(1.05, 0.94) rotate(-1.5deg);
+  }
+  60% {
+    transform: translateY(-9px) scale(0.98, 1.03) rotate(1deg);
+  }
+  80% {
+    transform: translateY(1px) scale(1.02, 0.98) rotate(0deg);
+  }
+}
+
+.animate-jiggle-baby {
+  animation: jiggleBaby 3.2s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
 /* Floating animation */
 @keyframes softFloat {
   0%, 100% { transform: translateY(0px) rotate(0deg); }
@@ -85,6 +108,25 @@ body {
 
 .animate-soft-float {
   animation: softFloat 4.5s ease-in-out infinite;
+}
+
+/* Cloudy Drift Animation */
+@keyframes cloudDriftLeft {
+  0%, 100% { transform: translateX(0px) translateY(0px) scale(1); opacity: 0.7; }
+  50% { transform: translateX(-22px) translateY(-8px) scale(1.08); opacity: 0.95; }
+}
+
+@keyframes cloudDriftRight {
+  0%, 100% { transform: translateX(0px) translateY(0px) scale(1); opacity: 0.7; }
+  50% { transform: translateX(24px) translateY(10px) scale(1.06); opacity: 0.95; }
+}
+
+.animate-cloud-drift-1 {
+  animation: cloudDriftLeft 6.5s ease-in-out infinite;
+}
+
+.animate-cloud-drift-2 {
+  animation: cloudDriftRight 8s ease-in-out infinite;
 }
 
 /* Starlight Pulse */

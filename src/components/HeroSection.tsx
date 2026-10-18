@@ -4,20 +4,33 @@
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import confetti from "canvas-confetti";
-import { Sparkles, Heart, Moon, Compass, Star, Award, ChevronDown } from "lucide-react";
+import { Sparkles, Heart, Moon, Compass, Star, Award, ChevronDown, Hand } from "lucide-react";
 import { sound } from "@/lib/sound";
+
+interface FloatingGiggle {
+  id: number;
+  text: string;
+  x: number;
+  y: number;
+}
 
 export function HeroSection() {
   const [easterEggClicks, setEasterEggClicks] = useState(0);
   const [easterEggUnlocked, setEasterEggUnlocked] = useState(false);
   const [counter, setCounter] = useState(1429);
   const [pupilPos, setPupilPos] = useState({ x: 0, y: 0 });
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [isJigglingHard, setIsJigglingHard] = useState(false);
+  const [giggles, setGiggles] = useState<FloatingGiggle[]>([]);
+
   const avatarRef = useRef<HTMLDivElement>(null);
+  const dragStartRef = useRef({ x: 0, y: 0, origX: 0, origY: 0 });
 
   // Dynamic eye tracking
   useEffect(() => {
     const handlePointerMove = (e: MouseEvent) => {
-      if (!avatarRef.current) return;
+      if (!avatarRef.current || isDragging) return;
       const rect = avatarRef.current.getBoundingClientRect();
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
@@ -35,7 +48,7 @@ export function HeroSection() {
 
     window.addEventListener("mousemove", handlePointerMove, { passive: true });
     return () => window.removeEventListener("mousemove", handlePointerMove);
-  }, []);
+  }, [isDragging]);
 
   // Periodic dreamy odometer increment
   useEffect(() => {
@@ -45,15 +58,106 @@ export function HeroSection() {
     return () => clearInterval(interval);
   }, []);
 
-  const handleNightcapClick = (e: React.MouseEvent) => {
+  // Draggable baby mechanics
+  const handleMouseDown = (e: React.MouseEvent) => {
+    setIsDragging(true);
+    dragStartRef.current = {
+      x: e.clientX,
+      y: e.clientY,
+      origX: dragOffset.x,
+      origY: dragOffset.y,
+    };
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (e.touches.length > 0) {
+      setIsDragging(true);
+      dragStartRef.current = {
+        x: e.touches[0].clientX,
+        y: e.touches[0].clientY,
+        origX: dragOffset.x,
+        origY: dragOffset.y,
+      };
+    }
+  };
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!isDragging) return;
+      const dx = e.clientX - dragStartRef.current.x;
+      const dy = e.clientY - dragStartRef.current.y;
+      setDragOffset({
+        x: dragStartRef.current.origX + dx,
+        y: dragStartRef.current.origY + dy,
+      });
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (!isDragging || e.touches.length === 0) return;
+      const dx = e.touches[0].clientX - dragStartRef.current.x;
+      const dy = e.touches[0].clientY - dragStartRef.current.y;
+      setDragOffset({
+        x: dragStartRef.current.origX + dx,
+        y: dragStartRef.current.origY + dy,
+      });
+    };
+
+    const handleDragEnd = () => {
+      if (isDragging) {
+        setIsDragging(false);
+        // Gently spring back toward center
+        setTimeout(() => {
+          setDragOffset({ x: 0, y: 0 });
+        }, 120);
+      }
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleDragEnd);
+    window.addEventListener("touchmove", handleTouchMove);
+    window.addEventListener("touchend", handleDragEnd);
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleDragEnd);
+      window.removeEventListener("touchmove", handleTouchMove);
+      window.removeEventListener("touchend", handleDragEnd);
+    };
+  }, [isDragging]);
+
+  // Cute baby giggling on click!
+  const handlePipClick = (e: React.MouseEvent) => {
+    // Play realistic, cute baby giggle
+    sound.playBabyGiggle();
+    setIsJigglingHard(true);
+    setTimeout(() => setIsJigglingHard(false), 900);
+
+    // Spawn floating cute giggle bubble
+    const giggleTexts = [
+      "Hee hee! (≧◡≦)",
+      "He-he-ha! ✨",
+      "Tickles! 💖",
+      "Aww! Giggles! ☁️",
+      "Giggle giggle! ★",
+    ];
+    const newGiggle: FloatingGiggle = {
+      id: Date.now() + Math.random(),
+      text: giggleTexts[Math.floor(Math.random() * giggleTexts.length)],
+      x: (Math.random() * 80) - 40,
+      y: (Math.random() * -40) - 20,
+    };
+
+    setGiggles((prev) => [...prev.slice(-4), newGiggle]);
+    setTimeout(() => {
+      setGiggles((prev) => prev.filter((g) => g.id !== newGiggle.id));
+    }, 1500);
+
+    // Easter egg check
     const newCount = easterEggClicks + 1;
     setEasterEggClicks(newCount);
-    sound.playClick();
 
     if (newCount >= 3) {
       setEasterEggUnlocked(true);
-      sound.playSleepyYawn();
-
       confetti({
         particleCount: 65,
         spread: 70,
@@ -75,10 +179,16 @@ export function HeroSection() {
       <div className="absolute top-8 left-10 text-[#a34063]/30 dark:text-[#ffd166]/30 text-2xl select-none animate-star-pulse">
         ★
       </div>
-      <div className="absolute top-24 right-12 text-[#fec84d]/40 dark:text-[#ffd166]/30 text-xl select-none animate-star-pulse" style={{ animationDelay: "1.2s" }}>
+      <div
+        className="absolute top-24 right-12 text-[#fec84d]/40 dark:text-[#ffd166]/30 text-xl select-none animate-star-pulse"
+        style={{ animationDelay: "1.2s" }}
+      >
         ✦
       </div>
-      <div className="absolute bottom-10 left-1/4 text-[#a34063]/25 dark:text-[#ff7597]/25 text-3xl select-none animate-star-pulse" style={{ animationDelay: "2.1s" }}>
+      <div
+        className="absolute bottom-10 left-1/4 text-[#a34063]/25 dark:text-[#ff7597]/25 text-3xl select-none animate-star-pulse"
+        style={{ animationDelay: "2.1s" }}
+      >
         ☾
       </div>
 
@@ -108,7 +218,7 @@ export function HeroSection() {
             </p>
           </div>
 
-          {/* Core Introduction (Plain words, <150 words per guidelines) */}
+          {/* Core Introduction (<150 words per guidelines) */}
           <p className="text-base sm:text-lg text-[#5c4033]/90 dark:text-[#e0d6dc] leading-relaxed max-w-xl mx-auto lg:mx-0">
             I am a sleepy skull baby with glowing amber eye sockets, a tiny crooked grin,
             and a starry nightcap. As the <strong>Junior Dream Engineer</strong> at Midnight
@@ -145,7 +255,7 @@ export function HeroSection() {
             </span>
             <div
               className="inline-flex bg-[#1a1726] text-[#ffd166] font-mono text-sm font-bold tracking-widest px-3 py-1 rounded border-2 border-[#5c4033] shadow-inner select-none"
-              title="Vintage mechanical dream delivery counter (+1 pt side quest)"
+              title="Vintage mechanical dream delivery counter"
             >
               {String(counter).padStart(6, "0")}
             </div>
@@ -170,62 +280,100 @@ export function HeroSection() {
           </div>
         </div>
 
-        {/* Right Column: Interactive Character Cloud Avatar & Easter Egg */}
-        <div className="lg:col-span-5 flex flex-col items-center">
+        {/* Right Column: Movable, Jiggly Cloud Baby with Cloudy Puffs */}
+        <div className="lg:col-span-5 flex flex-col items-center select-none">
+          {/* Cloud Stage Container */}
           <div
             ref={avatarRef}
-            className="relative w-72 sm:w-84 aspect-square flex items-center justify-center select-none group"
+            className="relative w-80 h-96 sm:w-96 sm:h-[420px] flex items-center justify-center select-none"
           >
-            {/* Ambient cloud glow */}
-            <div className="absolute inset-0 bg-[#ffdce5]/70 dark:bg-[#a34063]/30 rounded-full blur-2xl animate-pulse" />
+            {/* Ambient Multi-layer Cloud Puffs Behind and Around Pip */}
+            <div className="absolute inset-0 bg-[#ffdce5]/40 dark:bg-[#a34063]/25 rounded-full blur-3xl pointer-events-none" />
 
-            {/* Official Pip Avatar on Cloud */}
-            <div className="relative w-full h-full animate-soft-float">
+            {/* Drifting Soft Cloud Puff 1 (Left) */}
+            <div
+              className="absolute -bottom-4 -left-6 w-36 h-20 bg-white/80 dark:bg-[#231e36]/80 rounded-full blur-md animate-cloud-drift-1 pointer-events-none border border-white/40 dark:border-white/10"
+              style={{ boxShadow: "0 8px 24px rgba(255, 204, 216, 0.4)" }}
+            />
+
+            {/* Drifting Soft Cloud Puff 2 (Right) */}
+            <div
+              className="absolute -bottom-2 -right-6 w-44 h-24 bg-white/70 dark:bg-[#231e36]/70 rounded-full blur-md animate-cloud-drift-2 pointer-events-none border border-white/40 dark:border-white/10"
+              style={{ boxShadow: "0 8px 24px rgba(254, 200, 77, 0.3)" }}
+            />
+
+            {/* Drifting Soft Cloud Puff 3 (Center Base) */}
+            <div
+              className="absolute bottom-2 w-64 h-24 bg-white/90 dark:bg-[#1c182d]/90 rounded-full blur-sm pointer-events-none"
+            />
+
+            {/* Movable & Jiggly Baby Wrapper */}
+            <div
+              onMouseDown={handleMouseDown}
+              onTouchStart={handleTouchStart}
+              onClick={handlePipClick}
+              className={`relative w-72 h-88 sm:w-80 sm:h-96 cursor-grab active:cursor-grabbing transition-transform ${
+                isDragging ? "transition-none scale-105" : "transition-transform duration-300"
+              } ${isJigglingHard ? "scale-110 rotate-6" : "animate-jiggle-baby"}`}
+              style={{
+                transform: `translate(${dragOffset.x}px, ${dragOffset.y}px)`,
+              }}
+              title="Click to hear Pip giggle! Drag me around the cloud!"
+              role="button"
+              tabIndex={0}
+              aria-label="Interactive movable baby Pip. Click to make Pip laugh, or drag around."
+            >
+              {/* Transparent PNG without white background! */}
               <Image
                 src="/assets/pip_avatar_cloud.png"
-                alt="Pip the Skull Baby waving on a sleepy cloud with cozy nightcap"
+                alt="Pip the Skull Baby on a sleepy cloud"
                 fill
                 priority
-                className="object-contain drop-shadow-[0_16px_28px_rgba(92,64,51,0.18)]"
-                sizes="(max-width: 768px) 280px, 360px"
+                className="object-contain pointer-events-none drop-shadow-[0_18px_32px_rgba(92,64,51,0.22)] dark:drop-shadow-[0_18px_32px_rgba(255,117,151,0.25)]"
+                sizes="(max-width: 768px) 300px, 360px"
               />
 
-              {/* Secret Clickable Nightcap Area (Easter Egg Trigger) */}
-              <button
-                onClick={handleNightcapClick}
-                className="absolute top-4 left-1/2 -translate-x-1/2 w-28 h-20 rounded-full cursor-pointer opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center"
-                title="Psst... Tap Pip's starry nightcap 3 times!"
-                aria-label="Secret nightcap tap area"
-              >
-                <span className="text-[10px] font-bold bg-[#fff8f1] text-[#a34063] px-2 py-0.5 rounded-full shadow border border-[#a34063]">
-                  Tap me!
-                </span>
-              </button>
+              {/* Floating Baby Giggle Text Bubbles */}
+              {giggles.map((g) => (
+                <div
+                  key={g.id}
+                  className="absolute left-1/2 top-10 pointer-events-none bg-[#a34063] dark:bg-[#ffd166] text-white dark:text-[#0c0a15] text-xs font-bold px-3 py-1 rounded-full shadow-lg border border-white/60 animate-bounce"
+                  style={{
+                    transform: `translate(${g.x}px, ${g.y}px)`,
+                  }}
+                >
+                  {g.text}
+                </div>
+              ))}
             </div>
 
             {/* Easter Egg Floating Banner */}
             {easterEggUnlocked && (
-              <div className="absolute -bottom-6 bg-[#fff8f1] dark:bg-[#1f1b33] border-2 border-[#a34063] dark:border-[#ffd166] text-[#5c4033] dark:text-[#ffd166] px-4 py-2 rounded-2xl shadow-xl text-center z-20 animate-bounce">
+              <div className="absolute -bottom-8 bg-[#fff8f1] dark:bg-[#1f1b33] border-2 border-[#a34063] dark:border-[#ffd166] text-[#5c4033] dark:text-[#ffd166] px-4 py-2 rounded-2xl shadow-xl text-center z-20 animate-bounce">
                 <span className="text-xs font-bold flex items-center justify-center gap-1">
-                  <Award size={14} className="text-[#fec84d]" /> Easter Egg Unlocked!
+                  <Award size={14} className="text-[#fec84d]" /> Pip Giggled with Joy!
                 </span>
                 <p className="text-[11px] text-[#8a6a58] dark:text-[#bda7b5]">
-                  Pip giggled and sprinkled cozy stardust into your browser! ✨
+                  You discovered Pip’s sweet baby giggle and stardust blessing! ✨
                 </p>
               </div>
             )}
           </div>
 
-          {/* Hint note underneath avatar */}
-          <div className="mt-6 flex items-center gap-1.5 text-xs text-[#8a6a58] dark:text-[#bda7b5]">
-            <Sparkles size={13} className="text-[#a34063] dark:text-[#ffd166]" />
-            <span>Move your cursor to watch Pip’s cozy gaze wander!</span>
+          {/* Interactive Guidance Badges */}
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+            <span className="inline-flex items-center gap-1 text-[11px] font-bold bg-[#ffdce5] dark:bg-[#3d2331] text-[#a34063] dark:text-[#ffccd8] px-3 py-1 rounded-full border border-[#a34063]/20">
+              <Hand size={12} /> Drag me around!
+            </span>
+            <span className="inline-flex items-center gap-1 text-[11px] font-bold bg-[#fef5d6] dark:bg-[#342e1a] text-[#8a6000] dark:text-[#ffd166] px-3 py-1 rounded-full border border-[#fec84d]/30">
+              <Sparkles size={12} /> Click me to hear cute baby giggles!
+            </span>
           </div>
         </div>
       </div>
 
       {/* Down Scroll Prompt */}
-      <div className="flex justify-center pt-10">
+      <div className="flex justify-center pt-8">
         <a
           href="#lullaby-lab"
           onClick={() => sound.playClick()}
