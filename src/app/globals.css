@@ -1,0 +1,117 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Fredoka:wght@300..700&display=swap');
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --bg-cream: #fff8f1;
+  --bg-surface: #ffffff;
+  --text-primary: #5c4033;
+  --text-muted: #8a6a58;
+  --berry-primary: #a34063;
+  --berry-light: #ffdce5;
+  --berry-deep: #472d24;
+  --accent-gold: #fec84d;
+  --border-soft: rgba(163, 64, 99, 0.18);
+  --border-strong: rgba(92, 64, 51, 0.25);
+  --shadow-cozy: 0 10px 25px -4px rgba(92, 64, 51, 0.08), 0 4px 10px -2px rgba(163, 64, 99, 0.05);
+}
+
+.dark {
+  --bg-cream: #0c0a15;
+  --bg-surface: #161324;
+  --text-primary: #f5edf2;
+  --text-muted: #bda7b5;
+  --berry-primary: #ff7597;
+  --berry-light: #3d2331;
+  --berry-deep: #ffd166;
+  --accent-gold: #ffd166;
+  --border-soft: rgba(255, 117, 151, 0.22);
+  --border-strong: rgba(255, 209, 102, 0.35);
+  --shadow-cozy: 0 10px 30px -4px rgba(0, 0, 0, 0.6), 0 4px 12px -2px rgba(255, 117, 151, 0.1);
+}
+
+body {
+  background-color: var(--bg-cream);
+  color: var(--text-primary);
+  font-family: 'Fredoka', cursive, sans-serif;
+  transition: background-color 0.4s ease, color 0.3s ease;
+  overflow-x: hidden;
+}
+
+/* Typography Helpers */
+.font-editorial {
+  font-family: 'Fraunces', serif;
+}
+
+.font-bubbly {
+  font-family: 'Fredoka', cursive, sans-serif;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-cream);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--berry-primary);
+  border-radius: 9999px;
+  border: 2px solid var(--bg-cream);
+}
+
+/* Retro Early-Web Marquee */
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  display: inline-flex;
+  white-space: nowrap;
+  animation: marquee 22s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* Floating animation */
+@keyframes softFloat {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(1.2deg); }
+}
+
+.animate-soft-float {
+  animation: softFloat 4.5s ease-in-out infinite;
+}
+
+/* Starlight Pulse */
+@keyframes starPulse {
+  0%, 100% { opacity: 0.3; transform: scale(0.9); }
+  50% { opacity: 1; transform: scale(1.15); }
+}
+
+.animate-star-pulse {
+  animation: starPulse 2.8s ease-in-out infinite;
+}
+
+/* Retro browser window styling */
+.retro-window {
+  border: 2.5px solid var(--border-strong);
+  border-radius: 18px;
+  background-color: var(--bg-surface);
+  box-shadow: var(--shadow-cozy);
+}
+
+.retro-window-header {
+  background-color: var(--berry-light);
+  border-bottom: 2px solid var(--border-strong);
+  padding: 8px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+}
