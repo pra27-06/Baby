@@ -3,7 +3,7 @@
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { Sun, Moon, Sparkles, Wand2 } from "lucide-react";
+import { Sun, Moon, Sparkles, Wand2, Heart } from "lucide-react";
 import { sound } from "@/lib/sound";
 
 interface NavbarProps {
@@ -12,19 +12,23 @@ interface NavbarProps {
 }
 
 export function Navbar({ onToggleChaos, isChaosMode }: NavbarProps) {
+  // Default to false (Light Pastel Nursery by default!)
   const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
-    // Check initial preference or stored theme
     const saved = localStorage.getItem("pip_theme");
-    if (saved === "dark" || (!saved && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+    // Only go dark if explicitly saved as dark by user
+    if (saved === "dark") {
       setIsDark(true);
       document.documentElement.classList.add("dark");
+    } else {
+      setIsDark(false);
+      document.documentElement.classList.remove("dark");
     }
   }, []);
 
   const toggleTheme = () => {
-    sound.playClick();
+    sound.playBabyGiggle();
     const next = !isDark;
     setIsDark(next);
     if (next) {
@@ -36,16 +40,20 @@ export function Navbar({ onToggleChaos, isChaosMode }: NavbarProps) {
     }
   };
 
+  const handleNavClick = () => {
+    sound.playBabyGiggle();
+  };
+
   return (
-    <header className="sticky top-0 z-40 backdrop-blur-md bg-[#fff8f1]/90 dark:bg-[#0c0a15]/90 border-b border-[#a34063]/15 dark:border-[#ff7597]/20 transition-colors">
-      {/* Early-Web Top Banner Marquee */}
-      <div className="bg-[#a34063] dark:bg-[#ff7597] text-white dark:text-[#0c0a15] text-[11px] font-bold py-1 px-4 overflow-hidden select-none">
+    <header className="sticky top-0 z-40 backdrop-blur-md bg-[#fffaf4]/95 dark:bg-[#0c0a15]/95 border-b border-[#f472b6]/20 dark:border-[#ff7597]/20 transition-colors shadow-sm">
+      {/* Early-Web Top Banner Marquee in Cute Pastel Ribbon */}
+      <div className="bg-gradient-to-r from-[#f472b6] via-[#f43f5e] to-[#ec4899] dark:from-[#ff7597] dark:to-[#be185d] text-white dark:text-[#0c0a15] text-[11px] font-bold py-1 px-4 overflow-hidden select-none shadow-sm">
         <div className="animate-marquee gap-8 items-center flex">
-          <span>★ WELCOME TO MIDNIGHT NURSERY ★</span>
-          <span>CREATING SOOTHING DREAMS SINCE 17:17 IST</span>
-          <span>★ 100% GIGGLES GUARANTEED ★</span>
-          <span>OFFICIAL SUBMISSION FOR HAX.BABY FIRST WEBSITE HACKATHON</span>
-          <span>★ NO NIGHTMARES PERMITTED ON THIS FREQUENCY ★</span>
+          <span>🌸 WELCOME TO PIP’S PASTEL NURSERY 🌸</span>
+          <span>🍼 100% GENTLE SWEET DREAMS GUARANTEED 🍼</span>
+          <span>★ PLAYING BRAHMS’ SLEEP LULLABY ★</span>
+          <span>💖 OFFICIAL haX.baby FIRST WEBSITE HACKATHON ENTRY 💖</span>
+          <span>✨ MOVE CURSOR FOR STARDUST TWINKLES · CLICK FOR BABY GIGGLES ✨</span>
         </div>
       </div>
 
@@ -53,69 +61,70 @@ export function Navbar({ onToggleChaos, isChaosMode }: NavbarProps) {
         {/* Brand Lockup */}
         <a
           href="#"
-          onClick={() => sound.playClick()}
-          className="flex items-center gap-2 group cursor-pointer focus:outline-none"
+          onClick={handleNavClick}
+          className="flex items-center gap-2.5 group cursor-pointer focus:outline-none"
         >
-          <div className="relative w-8 h-8 rounded-full overflow-hidden border-2 border-[#a34063] dark:border-[#ffd166] group-hover:scale-110 transition-transform">
+          <div className="relative w-9 h-9 rounded-full overflow-hidden border-2 border-[#f472b6] dark:border-[#ffd166] group-hover:scale-110 transition-transform bg-[#ffe4ec] dark:bg-[#231e36]">
             <Image
               src="/assets/pip_avatar_cloud.png"
               alt="Pip tiny avatar"
               fill
               className="object-cover"
-              sizes="32px"
+              sizes="36px"
             />
           </div>
           <div className="flex flex-col">
-            <span className="font-editorial text-lg font-bold tracking-tight text-[#5c4033] dark:text-[#fff8f1] leading-none">
-              Pip<span className="text-[#a34063] dark:text-[#ff7597]">.dream</span>
+            <span className="font-editorial text-lg font-bold tracking-tight text-[#5c3828] dark:text-[#fff8f1] leading-none flex items-center gap-1">
+              Pip<span className="text-[#de547a] dark:text-[#ff7597]">.dream</span>
+              <Heart size={12} className="text-[#f472b6] fill-current animate-pulse" />
             </span>
-            <span className="text-[10px] text-[#a34063] dark:text-[#ffd166] tracking-wider uppercase font-semibold">
+            <span className="text-[10px] text-[#de547a] dark:text-[#ffd166] tracking-wider uppercase font-bold">
               Junior Dream Engineer
             </span>
           </div>
         </a>
 
         {/* Navigation Links */}
-        <nav className="hidden md:flex items-center gap-6 text-sm font-semibold text-[#5c4033] dark:text-[#f3ebf0]">
+        <nav className="hidden md:flex items-center gap-5 text-sm font-semibold text-[#5c3828] dark:text-[#f3ebf0]">
           <a
             href="#about"
-            onClick={() => sound.playClick()}
-            className="hover:text-[#a34063] dark:hover:text-[#ff7597] transition-colors"
+            onClick={handleNavClick}
+            className="hover:text-[#de547a] dark:hover:text-[#ff7597] transition-colors hover:scale-105 active:scale-95"
           >
             About Pip
           </a>
           <a
             href="#lullaby-lab"
-            onClick={() => sound.playClick()}
-            className="hover:text-[#a34063] dark:hover:text-[#ff7597] transition-colors"
+            onClick={handleNavClick}
+            className="hover:text-[#de547a] dark:hover:text-[#ff7597] transition-colors hover:scale-105 active:scale-95"
           >
             Lullaby Lab
           </a>
           <a
             href="#nightlights"
-            onClick={() => sound.playClick()}
-            className="hover:text-[#a34063] dark:hover:text-[#ff7597] transition-colors"
+            onClick={handleNavClick}
+            className="hover:text-[#de547a] dark:hover:text-[#ff7597] transition-colors hover:scale-105 active:scale-95"
           >
             Nightlights
           </a>
           <a
             href="#dream-routes"
-            onClick={() => sound.playClick()}
-            className="hover:text-[#a34063] dark:hover:text-[#ff7597] transition-colors"
+            onClick={handleNavClick}
+            className="hover:text-[#de547a] dark:hover:text-[#ff7597] transition-colors hover:scale-105 active:scale-95"
           >
             Delivery Map
           </a>
           <a
             href="#story"
-            onClick={() => sound.playClick()}
-            className="hover:text-[#a34063] dark:hover:text-[#ff7597] transition-colors"
+            onClick={handleNavClick}
+            className="hover:text-[#de547a] dark:hover:text-[#ff7597] transition-colors hover:scale-105 active:scale-95"
           >
             Bedtime Story
           </a>
           <a
             href="#guestbook"
-            onClick={() => sound.playClick()}
-            className="hover:text-[#a34063] dark:hover:text-[#ff7597] transition-colors"
+            onClick={handleNavClick}
+            className="hover:text-[#de547a] dark:hover:text-[#ff7597] transition-colors hover:scale-105 active:scale-95"
           >
             Guestbook
           </a>
@@ -126,29 +135,29 @@ export function Navbar({ onToggleChaos, isChaosMode }: NavbarProps) {
           {/* Chaos Mode Toggle (+5 pts Side Quest) */}
           <button
             onClick={() => {
-              sound.playClick();
+              sound.playBabyGiggle();
               onToggleChaos();
             }}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold border transition-all cursor-pointer ${
               isChaosMode
-                ? "bg-[#a34063] text-white border-[#a34063] shadow-md animate-bounce"
-                : "bg-[#fff8f1] dark:bg-[#1f1b33] text-[#a34063] dark:text-[#ffccd8] border-[#a34063]/30 hover:border-[#a34063]"
+                ? "bg-[#de547a] text-white border-[#de547a] shadow-md animate-bounce"
+                : "bg-[#fff0f5] dark:bg-[#1f1b33] text-[#de547a] dark:text-[#ffccd8] border-[#f472b6]/40 hover:border-[#de547a]"
             }`}
             title="Toggle Playroom Chaos Mode (+5 Side Quest Points)"
             aria-label="Toggle Chaos Mode"
           >
             <Wand2 size={13} className={isChaosMode ? "animate-spin" : ""} />
             <span className="hidden sm:inline">
-              {isChaosMode ? "Chaos Active!" : "Chaos Mode"}
+              {isChaosMode ? "Chaos Toys!" : "Chaos Mode"}
             </span>
           </button>
 
-          {/* Daylight / Midnight Mood Toggle */}
+          {/* Theme Toggle (Pastel Daylight vs Midnight Bedtime) */}
           <button
             onClick={toggleTheme}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-[#fff8f1] dark:bg-[#1f1b33] border border-[#a34063]/30 dark:border-[#ffd166]/40 text-[#5c4033] dark:text-[#ffd166] hover:border-[#a34063] transition-all cursor-pointer shadow-sm"
-            title="Toggle Daylight Nursery and Starlight Midnight mode"
-            aria-label={isDark ? "Switch to daylight nursery" : "Switch to midnight nursery"}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-[#fff0f5] dark:bg-[#1f1b33] border border-[#f472b6]/40 dark:border-[#ffd166]/40 text-[#5c3828] dark:text-[#ffd166] hover:border-[#de547a] transition-all cursor-pointer shadow-sm"
+            title="Toggle between Pastel Daylight Nursery and Midnight Bedtime mode"
+            aria-label={isDark ? "Switch to pastel daylight" : "Switch to midnight bedtime"}
           >
             {isDark ? (
               <>
@@ -157,8 +166,8 @@ export function Navbar({ onToggleChaos, isChaosMode }: NavbarProps) {
               </>
             ) : (
               <>
-                <Sun size={14} className="text-[#a34063]" />
-                <span className="hidden sm:inline">Daylight</span>
+                <Sun size={14} className="text-[#de547a]" />
+                <span className="hidden sm:inline">Pastel Sun</span>
               </>
             )}
           </button>

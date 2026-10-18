@@ -2,6 +2,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { sound } from "@/lib/sound";
 
 interface Sparkle {
   id: number;
@@ -12,8 +13,17 @@ interface Sparkle {
   color: string;
 }
 
-const STAR_CHARS = ["✦", "★", "·", "✧", "☾", "•"];
-const STAR_COLORS = ["#a34063", "#fec84d", "#ffccd8", "#ffd166", "#e07a9b"];
+const STAR_CHARS = ["✦", "★", "·", "✧", "☾", "•", "✨", "🌸", "⭐"];
+// Dreamy baby pastel stardust palette
+const PASTEL_COLORS = [
+  "#f472b6", // Pastel Pink
+  "#fbcfe8", // Cotton Candy
+  "#fef08a", // Buttercup Yellow
+  "#fed7aa", // Peach Cream
+  "#bae6fd", // Baby Sky Blue
+  "#ddd6fe", // Sweet Lavender
+  "#bbf7d0", // Soft Mint
+];
 
 export function SparkleTrail() {
   const [sparkles, setSparkles] = useState<Sparkle[]>([]);
@@ -21,7 +31,10 @@ export function SparkleTrail() {
   useEffect(() => {
     let count = 0;
     const handleMove = (e: MouseEvent) => {
-      // Moderate spawn frequency to preserve smooth 60fps
+      // Play soft magical stardust twinkle sound on movement!
+      sound.playCursorTwinkle();
+
+      // Moderate particle density for silky 60fps performance
       if (Math.random() > 0.45) return;
 
       const newSparkle: Sparkle = {
@@ -29,11 +42,11 @@ export function SparkleTrail() {
         x: e.clientX,
         y: e.clientY,
         char: STAR_CHARS[Math.floor(Math.random() * STAR_CHARS.length)],
-        size: Math.floor(Math.random() * 8) + 12,
-        color: STAR_COLORS[Math.floor(Math.random() * STAR_COLORS.length)],
+        size: Math.floor(Math.random() * 10) + 12,
+        color: PASTEL_COLORS[Math.floor(Math.random() * PASTEL_COLORS.length)],
       };
 
-      setSparkles((prev) => [...prev.slice(-16), newSparkle]);
+      setSparkles((prev) => [...prev.slice(-18), newSparkle]);
 
       setTimeout(() => {
         setSparkles((prev) => prev.filter((s) => s.id !== newSparkle.id));
@@ -46,7 +59,7 @@ export function SparkleTrail() {
 
   return (
     <div
-      className="pointer-events-none fixed inset-0 z-50 overflow-hidden"
+      className="pointer-events-none fixed inset-0 z-50 overflow-hidden select-none"
       aria-hidden="true"
     >
       {sparkles.map((s) => (
@@ -59,7 +72,7 @@ export function SparkleTrail() {
             fontSize: `${s.size}px`,
             color: s.color,
             transform: "translate(-50%, -50%)",
-            textShadow: `0 0 6px ${s.color}`,
+            textShadow: `0 0 8px ${s.color}`,
           }}
         >
           {s.char}

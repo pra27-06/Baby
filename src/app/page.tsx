@@ -13,40 +13,44 @@ import { Footer } from "@/components/Footer";
 import { SoundBar } from "@/components/SoundBar";
 import { SparkleTrail } from "@/components/SparkleTrail";
 import { ChaosMode } from "@/components/ChaosMode";
+import { PastelBabyDecor } from "@/components/PastelBabyDecor";
 
 export default function Home() {
   const [chaosActive, setChaosActive] = useState(false);
 
   return (
-    <main className="relative min-h-screen flex flex-col bg-[#fff8f1] dark:bg-[#0c0a15] text-[#5c4033] dark:text-[#f5edf2] transition-colors selection:bg-[#a34063] selection:text-white">
-      {/* Interactive Cursor Stardust Trail (+2 pts Side Quest) */}
+    <main className="relative min-h-screen flex flex-col bg-[#fffaf4] dark:bg-[#0c0a15] text-[#5c3828] dark:text-[#f5edf2] transition-colors selection:bg-[#de547a] selection:text-white">
+      {/* Interactive Cursor Stardust Trail with Magical Twinkle Chimes */}
       <SparkleTrail />
 
-      {/* Floating Audio Controls & Required Mute Toggle (+3 pts Side Quest) */}
+      {/* Floating Pastel Dream Bubbles & Squeaky Nursery Toys */}
+      <PastelBabyDecor />
+
+      {/* Floating Audio Controls, Mute Toggle & Constant Ambient Lullaby Switch */}
       <SoundBar />
 
       {/* Responsive Chaos Mode Floating Toy Sandbox (+5 pts Side Quest) */}
       <ChaosMode active={chaosActive} />
 
-      {/* Navigation Header with Theme & Chaos Controls */}
+      {/* Navigation Header with Pastel Theme & Chaos Controls */}
       <Navbar
         onToggleChaos={() => setChaosActive(!chaosActive)}
         isChaosMode={chaosActive}
       />
 
-      {/* Character Identity & Hero Showcase (Core Req 1 & Tier 1 Eye Tracking) */}
+      {/* Character Identity & Hero Showcase (Movable Jiggly Cloud Baby with Baby Laughs!) */}
       <HeroSection />
 
-      {/* Showcase Project 01: The Lullaby Lab Music Box (Core Req 2 & Tier 2 Web Audio) */}
+      {/* Showcase Project 01: The Lullaby Lab (Twinkle Twinkle, Brahms, Rockabye & Ambient Loop) */}
       <LullabyLab />
 
-      {/* Showcase Project 02: Dream Nightlight Lanterns (Core Req 2 & Day/Night Radiance) */}
+      {/* Showcase Project 02: Dream Nightlight Lanterns (Day/Night Radiance Dimmer) */}
       <NightlightGallery />
 
-      {/* Showcase Project 03: Rooftop Delivery Flight Map (Core Req 2 & Interactive Radar) */}
+      {/* Showcase Project 03: Rooftop Delivery Flight Map (Interactive Radar) */}
       <DreamRoutes />
 
-      {/* Bedtime Storybook Chronicles (Core Req 3: <150 words per vignette) */}
+      {/* Bedtime Storybook Chronicles (Origin scenes <150 words) */}
       <StorySection />
 
       {/* Live Community Dream Guestbook (+2 pts Side Quest) */}

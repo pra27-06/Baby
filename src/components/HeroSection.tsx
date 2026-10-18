@@ -105,7 +105,6 @@ export function HeroSection() {
     const handleDragEnd = () => {
       if (isDragging) {
         setIsDragging(false);
-        // Gently spring back toward center
         setTimeout(() => {
           setDragOffset({ x: 0, y: 0 });
         }, 120);
@@ -127,18 +126,17 @@ export function HeroSection() {
 
   // Cute baby giggling on click!
   const handlePipClick = (e: React.MouseEvent) => {
-    // Play realistic, cute baby giggle
     sound.playBabyGiggle();
     setIsJigglingHard(true);
     setTimeout(() => setIsJigglingHard(false), 900);
 
-    // Spawn floating cute giggle bubble
     const giggleTexts = [
       "Hee hee! (≧◡≦)",
       "He-he-ha! ✨",
       "Tickles! 💖",
       "Aww! Giggles! ☁️",
       "Giggle giggle! ★",
+      "Coo-coo! 🌸",
     ];
     const newGiggle: FloatingGiggle = {
       id: Date.now() + Math.random(),
@@ -152,7 +150,6 @@ export function HeroSection() {
       setGiggles((prev) => prev.filter((g) => g.id !== newGiggle.id));
     }, 1500);
 
-    // Easter egg check
     const newCount = easterEggClicks + 1;
     setEasterEggClicks(newCount);
 
@@ -165,7 +162,7 @@ export function HeroSection() {
           x: e.clientX / window.innerWidth,
           y: e.clientY / window.innerHeight,
         },
-        colors: ["#a34063", "#fec84d", "#ffccd8", "#fff8f1", "#ffd166"],
+        colors: ["#f472b6", "#fbcfe8", "#fef08a", "#bae6fd", "#ffd166"],
       });
     }
   };
@@ -176,7 +173,7 @@ export function HeroSection() {
       className="relative pt-12 pb-20 px-4 sm:px-6 max-w-6xl mx-auto overflow-hidden"
     >
       {/* Decorative Star Constellations in Background */}
-      <div className="absolute top-8 left-10 text-[#a34063]/30 dark:text-[#ffd166]/30 text-2xl select-none animate-star-pulse">
+      <div className="absolute top-8 left-10 text-[#f472b6]/35 dark:text-[#ffd166]/30 text-2xl select-none animate-star-pulse">
         ★
       </div>
       <div
@@ -186,7 +183,7 @@ export function HeroSection() {
         ✦
       </div>
       <div
-        className="absolute bottom-10 left-1/4 text-[#a34063]/25 dark:text-[#ff7597]/25 text-3xl select-none animate-star-pulse"
+        className="absolute bottom-10 left-1/4 text-[#f472b6]/30 dark:text-[#ff7597]/25 text-3xl select-none animate-star-pulse"
         style={{ animationDelay: "2.1s" }}
       >
         ☾
@@ -195,116 +192,116 @@ export function HeroSection() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
         {/* Left Column: Character Bio & Credentials */}
         <div className="lg:col-span-7 flex flex-col gap-5 text-center lg:text-left">
-          {/* Identity Eyebrow Badges */}
+          {/* Identity Eyebrow Badges with Pastel Pillows */}
           <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2.5">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#ffdce5] dark:bg-[#3d2331] text-[#a34063] dark:text-[#ffccd8] border border-[#a34063]/20">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#ffe4ec] dark:bg-[#3d2331] text-[#de547a] dark:text-[#ffccd8] border border-[#f472b6]/30 shadow-sm">
               <Sparkles size={12} /> Canon Track 1 · haX.baby
             </span>
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#fef5d6] dark:bg-[#342e1a] text-[#8a6000] dark:text-[#ffd166] border border-[#fec84d]/30">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#fef9c3] dark:bg-[#342e1a] text-[#854d0e] dark:text-[#ffd166] border border-[#fef08a]/50 shadow-sm">
               <Moon size={12} /> Midnight Nursery Staff
             </span>
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#e8f7ee] dark:bg-[#1a3324] text-[#1e7e43] dark:text-[#7ce6a4] border border-[#1e7e43]/20">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#e0f2fe] dark:bg-[#1a3324] text-[#0369a1] dark:text-[#7ce6a4] border border-[#bae6fd]/50 shadow-sm">
               <Heart size={12} /> 100% Gentle & Cute
             </span>
           </div>
 
           {/* Main Title & Editorial Headline */}
           <div>
-            <h1 className="font-editorial text-4xl sm:text-6xl font-bold tracking-tight text-[#5c4033] dark:text-[#fff8f1] leading-[1.08]">
-              Hello, I’m <span className="text-[#a34063] dark:text-[#ff7597]">Pip</span>!
+            <h1 className="font-editorial text-4xl sm:text-6xl font-bold tracking-tight text-[#5c3828] dark:text-[#fff8f1] leading-[1.08]">
+              Hello, I’m <span className="text-[#de547a] dark:text-[#ff7597]">Pip</span>!
             </h1>
-            <p className="font-editorial italic text-2xl sm:text-3xl text-[#a34063] dark:text-[#ffd166] mt-2 font-medium">
+            <p className="font-editorial italic text-2xl sm:text-3xl text-[#de547a] dark:text-[#ffd166] mt-2 font-medium">
               “I build the dreams you fall asleep inside.”
             </p>
           </div>
 
-          {/* Core Introduction (<150 words per guidelines) */}
-          <p className="text-base sm:text-lg text-[#5c4033]/90 dark:text-[#e0d6dc] leading-relaxed max-w-xl mx-auto lg:mx-0">
+          {/* Core Introduction */}
+          <p className="text-base sm:text-lg text-[#5c3828]/90 dark:text-[#e0d6dc] leading-relaxed max-w-xl mx-auto lg:mx-0">
             I am a sleepy skull baby with glowing amber eye sockets, a tiny crooked grin,
             and a starry nightcap. As the <strong>Junior Dream Engineer</strong> at Midnight
             Nursery, I craft celestial lullabies, glowing bedside nightlights, and cozy
             bedtime stories to tuck in every little creature across the neighborhood.
           </p>
 
-          {/* Character Quirks & Traits Grid */}
+          {/* Character Quirks & Traits Grid with Pastel Cards */}
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-2 text-xs">
-            <div className="p-3 rounded-xl bg-white/70 dark:bg-[#161324]/80 border border-[#a34063]/15 dark:border-[#ff7597]/20 shadow-sm">
-              <span className="block text-[#a34063] dark:text-[#ffd166] font-bold uppercase tracking-wider text-[10px]">
+            <div className="p-3.5 rounded-2xl bg-white/85 dark:bg-[#161324]/80 border-2 border-[#f472b6]/25 dark:border-[#ff7597]/20 shadow-sm">
+              <span className="block text-[#de547a] dark:text-[#ffd166] font-bold uppercase tracking-wider text-[10px]">
                 Species
               </span>
-              <strong className="text-sm text-[#5c4033] dark:text-white">Skull Baby</strong>
+              <strong className="text-sm text-[#5c3828] dark:text-white">Skull Baby</strong>
             </div>
-            <div className="p-3 rounded-xl bg-white/70 dark:bg-[#161324]/80 border border-[#a34063]/15 dark:border-[#ff7597]/20 shadow-sm">
-              <span className="block text-[#a34063] dark:text-[#ffd166] font-bold uppercase tracking-wider text-[10px]">
+            <div className="p-3.5 rounded-2xl bg-white/85 dark:bg-[#161324]/80 border-2 border-[#f472b6]/25 dark:border-[#ff7597]/20 shadow-sm">
+              <span className="block text-[#de547a] dark:text-[#ffd166] font-bold uppercase tracking-wider text-[10px]">
                 Specialty
               </span>
-              <strong className="text-sm text-[#5c4033] dark:text-white">Dream Synthesis</strong>
+              <strong className="text-sm text-[#5c3828] dark:text-white">Dream Synthesis</strong>
             </div>
-            <div className="col-span-2 sm:col-span-1 p-3 rounded-xl bg-white/70 dark:bg-[#161324]/80 border border-[#a34063]/15 dark:border-[#ff7597]/20 shadow-sm">
-              <span className="block text-[#a34063] dark:text-[#ffd166] font-bold uppercase tracking-wider text-[10px]">
+            <div className="col-span-2 sm:col-span-1 p-3.5 rounded-2xl bg-white/85 dark:bg-[#161324]/80 border-2 border-[#f472b6]/25 dark:border-[#ff7597]/20 shadow-sm">
+              <span className="block text-[#de547a] dark:text-[#ffd166] font-bold uppercase tracking-wider text-[10px]">
                 Secret Weapon
               </span>
-              <strong className="text-sm text-[#5c4033] dark:text-white">Giggles at Ghosts</strong>
+              <strong className="text-sm text-[#5c3828] dark:text-white">Giggles at Ghosts</strong>
             </div>
           </div>
 
-          {/* Vintage Odometer Hit Counter (+1 pt Side Quest) */}
+          {/* Vintage Odometer Hit Counter */}
           <div className="flex items-center justify-center lg:justify-start gap-3 pt-2">
-            <span className="text-xs font-bold text-[#8a6a58] dark:text-[#bda7b5] uppercase tracking-wider">
+            <span className="text-xs font-bold text-[#8c6552] dark:text-[#bda7b5] uppercase tracking-wider">
               Dreams Delivered:
             </span>
             <div
-              className="inline-flex bg-[#1a1726] text-[#ffd166] font-mono text-sm font-bold tracking-widest px-3 py-1 rounded border-2 border-[#5c4033] shadow-inner select-none"
+              className="inline-flex bg-[#1a1726] text-[#ffd166] font-mono text-sm font-bold tracking-widest px-3 py-1 rounded border-2 border-[#5c3828] shadow-inner select-none"
               title="Vintage mechanical dream delivery counter"
             >
               {String(counter).padStart(6, "0")}
             </div>
           </div>
 
-          {/* Call to action buttons */}
+          {/* Call to action buttons with sweet baby giggles */}
           <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 pt-3">
             <a
               href="#lullaby-lab"
-              onClick={() => sound.playClick()}
-              className="px-5 py-2.5 rounded-full bg-[#a34063] dark:bg-[#ff7597] text-white dark:text-[#0c0a15] text-sm font-bold shadow-md hover:scale-105 active:scale-95 transition-all cursor-pointer inline-flex items-center gap-2"
+              onClick={() => sound.playBabyGiggle()}
+              className="px-6 py-3 rounded-full bg-gradient-to-r from-[#f472b6] to-[#de547a] text-white text-sm font-bold shadow-md hover:scale-105 active:scale-95 transition-all cursor-pointer inline-flex items-center gap-2"
             >
               <Compass size={16} /> Explore Inventions
             </a>
             <a
               href="#story"
-              onClick={() => sound.playClick()}
-              className="px-5 py-2.5 rounded-full bg-white dark:bg-[#1f1b33] text-[#5c4033] dark:text-[#ffccd8] border-2 border-[#a34063]/30 hover:border-[#a34063] text-sm font-bold shadow-sm hover:scale-105 active:scale-95 transition-all cursor-pointer inline-flex items-center gap-2"
+              onClick={() => sound.playBabyGiggle()}
+              className="px-6 py-3 rounded-full bg-white dark:bg-[#1f1b33] text-[#5c3828] dark:text-[#ffccd8] border-2 border-[#f472b6]/40 hover:border-[#de547a] text-sm font-bold shadow-sm hover:scale-105 active:scale-95 transition-all cursor-pointer inline-flex items-center gap-2"
             >
               <Star size={16} /> Read Bedtime Story
             </a>
           </div>
         </div>
 
-        {/* Right Column: Movable, Jiggly Cloud Baby with Cloudy Puffs */}
+        {/* Right Column: Movable, Jiggly Cloud Baby with Soft Pastel Atmosphere */}
         <div className="lg:col-span-5 flex flex-col items-center select-none">
           {/* Cloud Stage Container */}
           <div
             ref={avatarRef}
             className="relative w-80 h-96 sm:w-96 sm:h-[420px] flex items-center justify-center select-none"
           >
-            {/* Ambient Multi-layer Cloud Puffs Behind and Around Pip */}
-            <div className="absolute inset-0 bg-[#ffdce5]/40 dark:bg-[#a34063]/25 rounded-full blur-3xl pointer-events-none" />
+            {/* Ambient Multi-layer Cloud Glow */}
+            <div className="absolute inset-0 bg-gradient-to-tr from-[#ffe4ec]/60 via-[#fef08a]/30 to-[#bae6fd]/50 dark:from-[#a34063]/25 dark:to-[#3d2331]/25 rounded-full blur-3xl pointer-events-none" />
 
             {/* Drifting Soft Cloud Puff 1 (Left) */}
             <div
-              className="absolute -bottom-4 -left-6 w-36 h-20 bg-white/80 dark:bg-[#231e36]/80 rounded-full blur-md animate-cloud-drift-1 pointer-events-none border border-white/40 dark:border-white/10"
-              style={{ boxShadow: "0 8px 24px rgba(255, 204, 216, 0.4)" }}
+              className="absolute -bottom-4 -left-6 w-36 h-20 bg-white/85 dark:bg-[#231e36]/80 rounded-full blur-md animate-cloud-drift-1 pointer-events-none border border-[#fbcfe8]/40 dark:border-white/10"
+              style={{ boxShadow: "0 8px 24px rgba(244, 114, 182, 0.25)" }}
             />
 
             {/* Drifting Soft Cloud Puff 2 (Right) */}
             <div
-              className="absolute -bottom-2 -right-6 w-44 h-24 bg-white/70 dark:bg-[#231e36]/70 rounded-full blur-md animate-cloud-drift-2 pointer-events-none border border-white/40 dark:border-white/10"
-              style={{ boxShadow: "0 8px 24px rgba(254, 200, 77, 0.3)" }}
+              className="absolute -bottom-2 -right-6 w-44 h-24 bg-white/75 dark:bg-[#231e36]/70 rounded-full blur-md animate-cloud-drift-2 pointer-events-none border border-[#fef08a]/40 dark:border-white/10"
+              style={{ boxShadow: "0 8px 24px rgba(254, 200, 77, 0.25)" }}
             />
 
             {/* Drifting Soft Cloud Puff 3 (Center Base) */}
             <div
-              className="absolute bottom-2 w-64 h-24 bg-white/90 dark:bg-[#1c182d]/90 rounded-full blur-sm pointer-events-none"
+              className="absolute bottom-2 w-64 h-24 bg-white/95 dark:bg-[#1c182d]/90 rounded-full blur-sm pointer-events-none"
             />
 
             {/* Movable & Jiggly Baby Wrapper */}
@@ -323,21 +320,20 @@ export function HeroSection() {
               tabIndex={0}
               aria-label="Interactive movable baby Pip. Click to make Pip laugh, or drag around."
             >
-              {/* Transparent PNG without white background! */}
               <Image
                 src="/assets/pip_avatar_cloud.png"
                 alt="Pip the Skull Baby on a sleepy cloud"
                 fill
                 priority
-                className="object-contain pointer-events-none drop-shadow-[0_18px_32px_rgba(92,64,51,0.22)] dark:drop-shadow-[0_18px_32px_rgba(255,117,151,0.25)]"
+                className="object-contain pointer-events-none drop-shadow-[0_18px_32px_rgba(244,114,182,0.25)] dark:drop-shadow-[0_18px_32px_rgba(255,117,151,0.25)]"
                 sizes="(max-width: 768px) 300px, 360px"
               />
 
-              {/* Floating Baby Giggle Text Bubbles */}
+              {/* Floating Baby Giggle Speech Bubbles */}
               {giggles.map((g) => (
                 <div
                   key={g.id}
-                  className="absolute left-1/2 top-10 pointer-events-none bg-[#a34063] dark:bg-[#ffd166] text-white dark:text-[#0c0a15] text-xs font-bold px-3 py-1 rounded-full shadow-lg border border-white/60 animate-bounce"
+                  className="absolute left-1/2 top-10 pointer-events-none bg-gradient-to-r from-[#f472b6] to-[#de547a] dark:from-[#ffd166] dark:to-[#fec84d] text-white dark:text-[#0c0a15] text-xs font-bold px-3 py-1 rounded-full shadow-lg border border-white/60 animate-bounce"
                   style={{
                     transform: `translate(${g.x}px, ${g.y}px)`,
                   }}
@@ -349,11 +345,11 @@ export function HeroSection() {
 
             {/* Easter Egg Floating Banner */}
             {easterEggUnlocked && (
-              <div className="absolute -bottom-8 bg-[#fff8f1] dark:bg-[#1f1b33] border-2 border-[#a34063] dark:border-[#ffd166] text-[#5c4033] dark:text-[#ffd166] px-4 py-2 rounded-2xl shadow-xl text-center z-20 animate-bounce">
+              <div className="absolute -bottom-8 bg-white dark:bg-[#1f1b33] border-2 border-[#f472b6] dark:border-[#ffd166] text-[#5c3828] dark:text-[#ffd166] px-4 py-2 rounded-2xl shadow-xl text-center z-20 animate-bounce">
                 <span className="text-xs font-bold flex items-center justify-center gap-1">
                   <Award size={14} className="text-[#fec84d]" /> Pip Giggled with Joy!
                 </span>
-                <p className="text-[11px] text-[#8a6a58] dark:text-[#bda7b5]">
+                <p className="text-[11px] text-[#8c6552] dark:text-[#bda7b5]">
                   You discovered Pip’s sweet baby giggle and stardust blessing! ✨
                 </p>
               </div>
@@ -362,10 +358,10 @@ export function HeroSection() {
 
           {/* Interactive Guidance Badges */}
           <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
-            <span className="inline-flex items-center gap-1 text-[11px] font-bold bg-[#ffdce5] dark:bg-[#3d2331] text-[#a34063] dark:text-[#ffccd8] px-3 py-1 rounded-full border border-[#a34063]/20">
+            <span className="inline-flex items-center gap-1 text-[11px] font-bold bg-[#ffe4ec] dark:bg-[#3d2331] text-[#de547a] dark:text-[#ffccd8] px-3 py-1 rounded-full border border-[#f472b6]/25 shadow-sm">
               <Hand size={12} /> Drag me around!
             </span>
-            <span className="inline-flex items-center gap-1 text-[11px] font-bold bg-[#fef5d6] dark:bg-[#342e1a] text-[#8a6000] dark:text-[#ffd166] px-3 py-1 rounded-full border border-[#fec84d]/30">
+            <span className="inline-flex items-center gap-1 text-[11px] font-bold bg-[#fef9c3] dark:bg-[#342e1a] text-[#854d0e] dark:text-[#ffd166] px-3 py-1 rounded-full border border-[#fef08a]/50 shadow-sm">
               <Sparkles size={12} /> Click me to hear cute baby giggles!
             </span>
           </div>
@@ -376,8 +372,8 @@ export function HeroSection() {
       <div className="flex justify-center pt-8">
         <a
           href="#lullaby-lab"
-          onClick={() => sound.playClick()}
-          className="flex flex-col items-center gap-1 text-xs font-bold text-[#a34063] dark:text-[#ffd166] hover:scale-105 transition-transform"
+          onClick={() => sound.playBabyGiggle()}
+          className="flex flex-col items-center gap-1 text-xs font-bold text-[#de547a] dark:text-[#ffd166] hover:scale-105 transition-transform"
         >
           <span>Step inside Pip’s workshop</span>
           <ChevronDown size={18} className="animate-bounce" />
