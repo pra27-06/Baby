@@ -17,7 +17,6 @@ export function Navbar({ onToggleChaos, isChaosMode }: NavbarProps) {
 
   useEffect(() => {
     const saved = localStorage.getItem("pip_theme");
-    // Only go dark if explicitly saved as dark by user
     if (saved === "dark") {
       setIsDark(true);
       document.documentElement.classList.add("dark");
@@ -51,9 +50,9 @@ export function Navbar({ onToggleChaos, isChaosMode }: NavbarProps) {
         <div className="animate-marquee gap-8 items-center flex">
           <span>🌸 WELCOME TO PIP’S PASTEL NURSERY 🌸</span>
           <span>🍼 100% GENTLE SWEET DREAMS GUARANTEED 🍼</span>
-          <span>★ PLAYING BRAHMS’ SLEEP LULLABY ★</span>
-          <span>💖 OFFICIAL haX.baby FIRST WEBSITE HACKATHON ENTRY 💖</span>
-          <span>✨ MOVE CURSOR FOR STARDUST TWINKLES · CLICK FOR BABY GIGGLES ✨</span>
+          <span>★ 3 BABY MINI-GAMES: SHAPE PUZZLE, STAR CATCHER & PEEK-A-BOO ★</span>
+          <span>💖 PRINCESS BEDTIME STORIES IN ENGLISH & हिन्दी 💖</span>
+          <span>✨ GENTLE WATERDROP CURSOR · SWEET BABY GIGGLES ✨</span>
         </div>
       </div>
 
@@ -85,7 +84,7 @@ export function Navbar({ onToggleChaos, isChaosMode }: NavbarProps) {
         </a>
 
         {/* Navigation Links */}
-        <nav className="hidden md:flex items-center gap-5 text-sm font-semibold text-[#5c3828] dark:text-[#f3ebf0]">
+        <nav className="hidden md:flex items-center gap-4 text-xs lg:text-sm font-semibold text-[#5c3828] dark:text-[#f3ebf0]">
           <a
             href="#about"
             onClick={handleNavClick}
@@ -99,6 +98,20 @@ export function Navbar({ onToggleChaos, isChaosMode }: NavbarProps) {
             className="hover:text-[#de547a] dark:hover:text-[#ff7597] transition-colors hover:scale-105 active:scale-95"
           >
             Lullaby Lab
+          </a>
+          <a
+            href="#baby-games"
+            onClick={handleNavClick}
+            className="hover:text-[#de547a] dark:hover:text-[#ff7597] transition-colors hover:scale-105 active:scale-95 text-[#de547a] dark:text-[#ffd166] font-bold"
+          >
+            🎮 Games
+          </a>
+          <a
+            href="#dream-stories"
+            onClick={handleNavClick}
+            className="hover:text-[#de547a] dark:hover:text-[#ff7597] transition-colors hover:scale-105 active:scale-95 text-[#de547a] dark:text-[#ffd166] font-bold"
+          >
+            📖 Stories (हिन्दी)
           </a>
           <a
             href="#nightlights"
@@ -115,13 +128,6 @@ export function Navbar({ onToggleChaos, isChaosMode }: NavbarProps) {
             Delivery Map
           </a>
           <a
-            href="#story"
-            onClick={handleNavClick}
-            className="hover:text-[#de547a] dark:hover:text-[#ff7597] transition-colors hover:scale-105 active:scale-95"
-          >
-            Bedtime Story
-          </a>
-          <a
             href="#guestbook"
             onClick={handleNavClick}
             className="hover:text-[#de547a] dark:hover:text-[#ff7597] transition-colors hover:scale-105 active:scale-95"
@@ -132,7 +138,7 @@ export function Navbar({ onToggleChaos, isChaosMode }: NavbarProps) {
 
         {/* Action Controls */}
         <div className="flex items-center gap-2">
-          {/* Chaos Mode Toggle (+5 pts Side Quest) */}
+          {/* Chaos Mode Toggle */}
           <button
             onClick={() => {
               sound.playBabyGiggle();
@@ -152,7 +158,7 @@ export function Navbar({ onToggleChaos, isChaosMode }: NavbarProps) {
             </span>
           </button>
 
-          {/* Theme Toggle (Pastel Daylight vs Midnight Bedtime) */}
+          {/* Theme Toggle */}
           <button
             onClick={toggleTheme}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-[#fff0f5] dark:bg-[#1f1b33] border border-[#f472b6]/40 dark:border-[#ffd166]/40 text-[#5c3828] dark:text-[#ffd166] hover:border-[#de547a] transition-all cursor-pointer shadow-sm"

@@ -129,14 +129,14 @@ export const LULLABY_CATALOG: LullabySong[] = [
   {
     id: "twinkle",
     title: "Twinkle Twinkle Little Star",
-    subtitle: "Classic bedside star melody with soothing high chimes",
+    subtitle: "Classic bedside star melody with soothing chimes",
     icon: "⭐",
     notes: TWINKLE_TWINKLE,
   },
   {
     id: "brahms",
     title: "Brahms’ Lullaby (Wiegenlied)",
-    subtitle: "The world's most famous gentle music box cradle song",
+    subtitle: "The world's most famous gentle cradle song",
     icon: "🌙",
     notes: BRAHMS_SONG,
   },
@@ -150,7 +150,7 @@ export const LULLABY_CATALOG: LullabySong[] = [
   {
     id: "hush",
     title: "Hush Little Baby",
-    subtitle: "Warm bedtime lullaby with soft lullaby reassurance",
+    subtitle: "Warm bedtime lullaby with soft reassurance",
     icon: "🧸",
     notes: HUSH_LITTLE_BABY,
   },
@@ -237,37 +237,49 @@ class SoundEngine {
     this.ambientListeners.forEach((fn) => fn(looping));
   }
 
-  // 1. Soft Magical Stardust Twinkle for Cursor Movements
+  // 1. Ultra-Soft, Baby-Safe Velvet Water-Drop Cursor Sound
+  // Designed specifically to never harm or irritate little baby ears!
   public playCursorTwinkle() {
     if (this.isMuted) return;
     const now = Date.now();
-    if (now - this.lastTwinkleTime < 130) return;
+    if (now - this.lastTwinkleTime < 180) return; // Gentle 180ms throttle
     this.lastTwinkleTime = now;
 
     const ctx = this.getContext();
     if (!ctx) return;
 
-    const twinkleFreqs = [1318.51, 1567.98, 1760.0, 2093.0, 2349.32, 2637.02];
-    const freq = twinkleFreqs[Math.floor(Math.random() * twinkleFreqs.length)];
+    // Warm, rounded, cozy frequencies (around 380 - 520Hz) - like a soft warm drop in milk
+    const softPitches = [349.23, 392.00, 440.00, 523.25];
+    const freq = softPitches[Math.floor(Math.random() * softPitches.length)];
 
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
+    const filter = ctx.createBiquadFilter();
 
+    // Heavy lowpass filter cuts out all harsh high frequencies
+    filter.type = "lowpass";
+    filter.frequency.setValueAtTime(650, ctx.currentTime);
+    filter.Q.setValueAtTime(1.0, ctx.currentTime);
+
+    // Warm, gentle sine wave
     osc.type = "sine";
     osc.frequency.setValueAtTime(freq, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(freq * 0.95, ctx.currentTime + 0.12);
 
+    // Ultra-low, delicate volume (0.012) - a calming whisper
     gain.gain.setValueAtTime(0.0001, ctx.currentTime);
-    gain.gain.linearRampToValueAtTime(0.025, ctx.currentTime + 0.015);
-    gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.16);
+    gain.gain.linearRampToValueAtTime(0.014, ctx.currentTime + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.12);
 
-    osc.connect(gain);
+    osc.connect(filter);
+    filter.connect(gain);
     gain.connect(ctx.destination);
 
     osc.start(ctx.currentTime);
-    osc.stop(ctx.currentTime + 0.16);
+    osc.stop(ctx.currentTime + 0.12);
   }
 
-  // 2. Realistic Baby Giggles with 3 Happy Variations
+  // 2. Realistic, Sweet Baby Giggles on Clicks!
   public playBabyGiggle() {
     if (this.isMuted) return;
     const ctx = this.getContext();
@@ -333,7 +345,7 @@ class SoundEngine {
     });
   }
 
-  // 3. Bubble Pop
+  // 3. Gentle Soft Bubble Pop
   public playBubblePop() {
     if (this.isMuted) return;
     const ctx = this.getContext();
@@ -343,21 +355,21 @@ class SoundEngine {
     const gain = ctx.createGain();
 
     osc.type = "sine";
-    osc.frequency.setValueAtTime(800, ctx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(1400, ctx.currentTime + 0.04);
-    osc.frequency.exponentialRampToValueAtTime(300, ctx.currentTime + 0.09);
+    osc.frequency.setValueAtTime(500, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(850, ctx.currentTime + 0.05);
+    osc.frequency.exponentialRampToValueAtTime(260, ctx.currentTime + 0.10);
 
-    gain.gain.setValueAtTime(0.12, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.09);
+    gain.gain.setValueAtTime(0.09, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.10);
 
     osc.connect(gain);
     gain.connect(ctx.destination);
 
     osc.start(ctx.currentTime);
-    osc.stop(ctx.currentTime + 0.09);
+    osc.stop(ctx.currentTime + 0.10);
   }
 
-  // 4. Rattle Shake
+  // 4. Baby Rattle Shake
   public playRattleShake() {
     if (this.isMuted) return;
     const ctx = this.getContext();
@@ -371,8 +383,8 @@ class SoundEngine {
         const gain = ctx.createGain();
 
         osc.type = "triangle";
-        osc.frequency.setValueAtTime(500 + Math.random() * 300, now);
-        gain.gain.setValueAtTime(0.08, now);
+        osc.frequency.setValueAtTime(450 + Math.random() * 200, now);
+        gain.gain.setValueAtTime(0.07, now);
         gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
 
         osc.connect(gain);
@@ -384,8 +396,8 @@ class SoundEngine {
     }
   }
 
-  // 5. Classic Music Box Chime
-  public playChime(freq: number = 392.0, duration: number = 0.8, volume: number = 0.2) {
+  // 5. Classic Soft Music Box Chime
+  public playChime(freq: number = 392.0, duration: number = 0.8, volume: number = 0.18) {
     if (this.isMuted) return;
     const ctx = this.getContext();
     if (!ctx) return;
@@ -414,12 +426,11 @@ class SoundEngine {
     oscHarmonic.stop(ctx.currentTime + duration);
   }
 
-  // Generic Button Click -> Triggers Cute Baby Laugh!
   public playClick() {
     this.playBabyGiggle();
   }
 
-  // 6. Play ANY Lullaby from the Catalog by ID!
+  // 6. Play Lullaby with Looping Support
   public playLullaby(songId: string = "twinkle") {
     if (this.isMuted) return;
     this.stopLullaby();
@@ -436,15 +447,13 @@ class SoundEngine {
           this.stopLullaby();
           return;
         }
-        // If ambient looping, play slightly softer
-        const vol = this.isAmbientLooping ? 0.09 : 0.2;
+        const vol = this.isAmbientLooping ? 0.07 : 0.18;
         this.playChime(freq, duration + 0.35, vol);
         this.notifyLullaby(true, lyric, song.id);
 
         if (index === song.notes.length - 1) {
           const endTimeout = setTimeout(() => {
             if (this.isAmbientLooping && !this.isMuted) {
-              // Loop to next lullaby in catalog!
               const currentIdx = LULLABY_CATALOG.findIndex((s) => s.id === song.id);
               const nextSong = LULLABY_CATALOG[(currentIdx + 1) % LULLABY_CATALOG.length];
               this.playLullaby(nextSong.id);
@@ -461,7 +470,6 @@ class SoundEngine {
     });
   }
 
-  // Constant Ambient Background Lullaby Mode
   public startAmbientLoop(songId?: string) {
     if (this.isMuted) {
       this.toggleMute();
