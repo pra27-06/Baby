@@ -168,3 +168,22 @@ body {
   border-top-left-radius: 21px;
   border-top-right-radius: 21px;
 }
+
+/* Cute Baby Doodles & Sparkles */
+@keyframes doodleWiggle {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  25% { transform: rotate(-8deg) scale(1.08); }
+  75% { transform: rotate(8deg) scale(1.08); }
+}
+
+.animate-wiggle {
+  animation: doodleWiggle 2s ease-in-out infinite;
+}
+
+.doodle-sticker {
+  filter: drop-shadow(0 4px 12px rgba(244, 114, 182, 0.25));
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.doodle-sticker:hover {
+  transform: scale(1.22) rotate(6deg);
+}

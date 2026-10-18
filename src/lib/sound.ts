@@ -188,10 +188,10 @@ class SoundEngine {
     this.hasLoadedGiggles = true;
 
     const urls = [
-      "/assets/baby_giggle_1.wav",
-      "/assets/baby_giggle_2.wav",
-      "/assets/baby_giggle_3.wav",
-      "/assets/baby_giggle_short.wav",
+      "/assets/baby_coo_1.wav",
+      "/assets/baby_coo_2.wav",
+      "/assets/baby_coo_3.wav",
+      "/assets/baby_coo_short.wav",
     ];
 
     try {
@@ -340,8 +340,8 @@ class SoundEngine {
         const source = ctx.createBufferSource();
         source.buffer = buf;
         const gain = ctx.createGain();
-        // Warm, audible, gentle volume - loud enough for babies to enjoy, soft on little ears
-        gain.gain.setValueAtTime(0.85, ctx.currentTime);
+        // Ultra-gentle, soft, velvety volume (0.42) - sweet, adorable and delicate for baby ears
+        gain.gain.setValueAtTime(0.42, ctx.currentTime);
         source.connect(gain);
         gain.connect(ctx.destination);
         source.start(0);
@@ -357,7 +357,7 @@ class SoundEngine {
         const el = this.giggleAudioElements[this.giggleCycle % this.giggleAudioElements.length];
         if (el) {
           el.currentTime = 0;
-          el.volume = 0.85;
+          el.volume = 0.42;
           el.play().catch(() => {});
           return;
         }
@@ -368,6 +368,15 @@ class SoundEngine {
 
     // 3. Gentle sweet chime fallback if audio assets are blocked
     this.playChime(523.25, 0.4);
+  }
+
+  // Alias for soft baby coo and jiggle
+  public playBabyCoo() {
+    this.playBabyGiggle();
+  }
+
+  public playBabyJiggle() {
+    this.playBabyGiggle();
   }
 
   // 3. Gentle Soft Bubble Pop

@@ -304,6 +304,40 @@ export function HeroSection() {
               className="absolute bottom-2 w-64 h-24 bg-white/95 dark:bg-[#1c182d]/90 rounded-full blur-sm pointer-events-none"
             />
 
+            {/* Cute Interactive Baby Doodles around the Cloud */}
+            <button
+              onClick={() => sound.playBabyCoo()}
+              className="absolute -top-3 -left-4 z-20 text-3xl p-2 rounded-2xl bg-[#fff0f5]/90 dark:bg-[#2a2238]/90 border-2 border-[#fbcfe8] shadow-md hover:scale-130 active:scale-95 transition-all cursor-pointer animate-wiggle"
+              title="Pip's warm milk bottle! 🍼"
+              aria-label="Baby milk bottle doodle"
+            >
+              🍼
+            </button>
+            <button
+              onClick={() => sound.playBabyCoo()}
+              className="absolute -top-4 -right-4 z-20 text-3xl p-2 rounded-2xl bg-[#fefce8]/90 dark:bg-[#2a2238]/90 border-2 border-[#fef08a] shadow-md hover:scale-130 active:scale-95 transition-all cursor-pointer animate-pulse"
+              title="Bedtime Star! ⭐"
+              aria-label="Twinkle star doodle"
+            >
+              ⭐
+            </button>
+            <button
+              onClick={() => sound.playBabyCoo()}
+              className="absolute -bottom-6 -right-6 z-20 text-3xl p-2 rounded-2xl bg-[#fdf2f8]/90 dark:bg-[#2a2238]/90 border-2 border-[#fbcfe8] shadow-md hover:scale-130 active:scale-95 transition-all cursor-pointer animate-bounce"
+              title="Cuddly Teddy Bear! 🧸"
+              aria-label="Teddy bear doodle"
+            >
+              🧸
+            </button>
+            <button
+              onClick={() => sound.playBabyCoo()}
+              className="absolute -bottom-6 -left-6 z-20 text-3xl p-2 rounded-2xl bg-[#eff6ff]/90 dark:bg-[#2a2238]/90 border-2 border-[#bae6fd] shadow-md hover:scale-130 active:scale-95 transition-all cursor-pointer animate-pulse"
+              title="Heart Balloon! 🎈"
+              aria-label="Heart balloon doodle"
+            >
+              🎈
+            </button>
+
             {/* Movable & Jiggly Baby Wrapper */}
             <div
               onMouseDown={handleMouseDown}
