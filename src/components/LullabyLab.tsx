@@ -3,8 +3,9 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { Music, Play, Square, RotateCcw, Volume2, Sparkles, Heart, Repeat } from "lucide-react";
+import { Music, Play, Square, RotateCcw, Volume2, Sparkles, Heart, Repeat, Crown } from "lucide-react";
 import { sound, LULLABY_NOTES, LULLABY_CATALOG, LullabySong } from "@/lib/sound";
+import { bedtimeNarrator } from "@/lib/narrator";
 
 export function LullabyLab() {
   const [activeNote, setActiveNote] = useState<string | null>(null);
@@ -13,6 +14,7 @@ export function LullabyLab() {
   const [currentLyric, setCurrentLyric] = useState("");
   const [selectedSongId, setSelectedSongId] = useState("twinkle");
   const [isAmbientLoop, setIsAmbientLoop] = useState(false);
+  const [isRecitingPoem, setIsRecitingPoem] = useState(false);
 
   useEffect(() => {
     const unsubLullaby = sound.subscribeLullaby((playing, lyric, songId) => {
@@ -82,6 +84,40 @@ export function LullabyLab() {
     sound.toggleAmbientLoop();
   };
 
+  const reciteLullabyPoem = () => {
+    sound.playBabyGiggle();
+    if (isRecitingPoem) {
+      bedtimeNarrator.stop();
+      setIsRecitingPoem(false);
+      return;
+    }
+
+    const poems: Record<string, string> = {
+      twinkle:
+        "Twinkle, twinkle, little star... how I wonder what you are! Up above the world so high... like a diamond in the sky. Twinkle, twinkle, little star... slumber softly, baby dear... sweet dreams are near.",
+      brahms:
+        "Lullaby, and goodnight... in the skies, stars are bright. May sweet dreams delight... sleep in peace through the deep starlit night... slumber gently until morning light.",
+      rockabye:
+        "Rock-a-bye baby, on the tree top... when the wind blows, the cradle will rock. Softly you slumber, safe in your bed... warm angels watch over your little sweet head.",
+      hush:
+        "Hush, little baby, don't say a word... Pip is watching from the starlit world. Rest now your sleepy eyes, dream through the night... sleep safe and sound till the morning is bright.",
+    };
+
+    const text = poems[selectedSongId] || poems.twinkle;
+    sound.playChime(523.25, 0.4);
+
+    bedtimeNarrator.speak({
+      text,
+      lang: "en",
+      onStart: () => setIsRecitingPoem(true),
+      onEnd: () => {
+        setIsRecitingPoem(false);
+        sound.playChime(392.0, 0.8);
+      },
+      onError: () => setIsRecitingPoem(false),
+    });
+  };
+
   const currentSong = LULLABY_CATALOG.find((s) => s.id === selectedSongId) || LULLABY_CATALOG[0];
 
   return (
@@ -117,6 +153,21 @@ export function LullabyLab() {
             >
               <Repeat size={14} className={isAmbientLoop ? "animate-spin" : ""} />
               <span>{isAmbientLoop ? "Ambient Loop: ON 🎵" : "Ambient Loop: OFF"}</span>
+            </button>
+
+            {/* Princess Poem Recitation */}
+            <button
+              onClick={reciteLullabyPoem}
+              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer border ${
+                isRecitingPoem
+                  ? "bg-[#de547a] text-white border-[#de547a] shadow-md animate-pulse"
+                  : "bg-[#fff0f4] dark:bg-[#3d2331] text-[#de547a] dark:text-[#ffccd8] border-[#f472b6]/30 hover:border-[#de547a]"
+              }`}
+              title="Listen to this lullaby poem read by the Princess"
+              aria-label="Princess poem recitation"
+            >
+              <Crown size={14} className={isRecitingPoem ? "animate-bounce" : ""} />
+              <span>{isRecitingPoem ? "Stop Recitation" : "Princess Recites Poem ♪"}</span>
             </button>
 
             {/* Winding Key */}

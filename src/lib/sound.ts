@@ -170,11 +170,54 @@ class SoundEngine {
 
   private lastTwinkleTime: number = 0;
   private giggleCycle: number = 0;
+  private giggleBuffers: AudioBuffer[] = [];
+  private hasLoadedGiggles: boolean = false;
+  private giggleAudioElements: HTMLAudioElement[] = [];
 
   constructor() {
     if (typeof window !== "undefined") {
       const savedMute = localStorage.getItem("pip_sound_muted");
       this.isMuted = savedMute !== null ? savedMute === "true" : false;
+      this.loadGiggles();
+      window.addEventListener("pointerdown", () => this.loadGiggles(), { once: true });
+    }
+  }
+
+  private async loadGiggles() {
+    if (this.hasLoadedGiggles || typeof window === "undefined") return;
+    this.hasLoadedGiggles = true;
+
+    const urls = [
+      "/assets/baby_giggle_1.wav",
+      "/assets/baby_giggle_2.wav",
+      "/assets/baby_giggle_3.wav",
+      "/assets/baby_giggle_short.wav",
+    ];
+
+    try {
+      this.giggleAudioElements = urls.map((u) => {
+        const a = new Audio(u);
+        a.preload = "auto";
+        return a;
+      });
+    } catch {
+      // Audio element not supported in current environment
+    }
+
+    const ctx = this.getContext();
+    if (!ctx) return;
+
+    for (const url of urls) {
+      try {
+        const res = await fetch(url);
+        if (res.ok) {
+          const buf = await res.arrayBuffer();
+          const decoded = await ctx.decodeAudioData(buf);
+          this.giggleBuffers.push(decoded);
+        }
+      } catch {
+        // Fallback to HTMLAudioElements
+      }
     }
   }
 
@@ -279,70 +322,52 @@ class SoundEngine {
     osc.stop(ctx.currentTime + 0.12);
   }
 
-  // 2. Realistic, Sweet Baby Giggles on Clicks!
+  // 2. Realistic, Adorable Newborn Baby Giggle on Clicks!
   public playBabyGiggle() {
     if (this.isMuted) return;
+
+    if (!this.hasLoadedGiggles) {
+      this.loadGiggles();
+    }
+
     const ctx = this.getContext();
-    if (!ctx) return;
+    this.giggleCycle = (this.giggleCycle + 1) % 4;
 
-    this.giggleCycle = (this.giggleCycle + 1) % 3;
-
-    const variations = [
-      [
-        { f: 620, dur: 0.07, delay: 0 },
-        { f: 740, dur: 0.08, delay: 0.08 },
-        { f: 880, dur: 0.10, delay: 0.17 },
-        { f: 940, dur: 0.11, delay: 0.28 },
-        { f: 1040, dur: 0.15, delay: 0.40 },
-      ],
-      [
-        { f: 700, dur: 0.08, delay: 0 },
-        { f: 860, dur: 0.09, delay: 0.09 },
-        { f: 980, dur: 0.12, delay: 0.20 },
-        { f: 820, dur: 0.08, delay: 0.33 },
-        { f: 1120, dur: 0.16, delay: 0.42 },
-      ],
-      [
-        { f: 560, dur: 0.07, delay: 0 },
-        { f: 680, dur: 0.07, delay: 0.07 },
-        { f: 820, dur: 0.08, delay: 0.15 },
-        { f: 960, dur: 0.09, delay: 0.24 },
-        { f: 1060, dur: 0.13, delay: 0.34 },
-        { f: 1200, dur: 0.18, delay: 0.48 },
-      ],
-    ];
-
-    const chosenBurst = variations[this.giggleCycle];
-
-    chosenBurst.forEach((g) => {
-      setTimeout(() => {
-        if (this.isMuted) return;
-        const now = ctx.currentTime;
-        const osc = ctx.createOscillator();
+    // 1. Play with Web Audio if buffer is ready (zero latency, smooth volume)
+    if (ctx && this.giggleBuffers.length > 0) {
+      try {
+        const buf = this.giggleBuffers[this.giggleCycle % this.giggleBuffers.length];
+        const source = ctx.createBufferSource();
+        source.buffer = buf;
         const gain = ctx.createGain();
-        const filter = ctx.createBiquadFilter();
-
-        filter.type = "bandpass";
-        filter.frequency.setValueAtTime(g.f * 1.45, now);
-        filter.Q.setValueAtTime(3.8, now);
-
-        osc.type = "triangle";
-        osc.frequency.setValueAtTime(g.f, now);
-        osc.frequency.linearRampToValueAtTime(g.f * 1.12, now + g.dur * 0.4);
-        osc.frequency.exponentialRampToValueAtTime(g.f * 0.92, now + g.dur);
-
-        gain.gain.setValueAtTime(0.001, now);
-        gain.gain.linearRampToValueAtTime(0.18, now + 0.02);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + g.dur);
-
-        osc.connect(filter);
-        filter.connect(gain);
+        // Warm, audible, gentle volume - loud enough for babies to enjoy, soft on little ears
+        gain.gain.setValueAtTime(0.85, ctx.currentTime);
+        source.connect(gain);
         gain.connect(ctx.destination);
+        source.start(0);
+        return;
+      } catch {
+        // Fall through to HTMLAudioElements
+      }
+    }
 
-        osc.start(now);
-        osc.stop(now + g.dur);
-      }, g.delay * 1000);
-    });
+    // 2. Play with HTMLAudioElement
+    if (this.giggleAudioElements.length > 0) {
+      try {
+        const el = this.giggleAudioElements[this.giggleCycle % this.giggleAudioElements.length];
+        if (el) {
+          el.currentTime = 0;
+          el.volume = 0.85;
+          el.play().catch(() => {});
+          return;
+        }
+      } catch {
+        // Fall through
+      }
+    }
+
+    // 3. Gentle sweet chime fallback if audio assets are blocked
+    this.playChime(523.25, 0.4);
   }
 
   // 3. Gentle Soft Bubble Pop
