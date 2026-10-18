@@ -169,55 +169,12 @@ class SoundEngine {
   private ambientListeners: Set<(looping: boolean) => void> = new Set();
 
   private lastTwinkleTime: number = 0;
-  private giggleCycle: number = 0;
-  private giggleBuffers: AudioBuffer[] = [];
-  private hasLoadedGiggles: boolean = false;
-  private giggleAudioElements: HTMLAudioElement[] = [];
+  private clickCycle: number = 0;
 
   constructor() {
     if (typeof window !== "undefined") {
       const savedMute = localStorage.getItem("pip_sound_muted");
       this.isMuted = savedMute !== null ? savedMute === "true" : false;
-      this.loadGiggles();
-      window.addEventListener("pointerdown", () => this.loadGiggles(), { once: true });
-    }
-  }
-
-  private async loadGiggles() {
-    if (this.hasLoadedGiggles || typeof window === "undefined") return;
-    this.hasLoadedGiggles = true;
-
-    const urls = [
-      "/assets/baby_coo_1.wav",
-      "/assets/baby_coo_2.wav",
-      "/assets/baby_coo_3.wav",
-      "/assets/baby_coo_short.wav",
-    ];
-
-    try {
-      this.giggleAudioElements = urls.map((u) => {
-        const a = new Audio(u);
-        a.preload = "auto";
-        return a;
-      });
-    } catch {
-      // Audio element not supported in current environment
-    }
-
-    const ctx = this.getContext();
-    if (!ctx) return;
-
-    for (const url of urls) {
-      try {
-        const res = await fetch(url);
-        if (res.ok) {
-          const buf = await res.arrayBuffer();
-          const decoded = await ctx.decodeAudioData(buf);
-          this.giggleBuffers.push(decoded);
-        }
-      } catch {
-        // Fallback to HTMLAudioElements
-      }
     }
   }
 
@@ -322,61 +279,54 @@ class SoundEngine {
     osc.stop(ctx.currentTime + 0.12);
   }
 
-  // 2. Realistic, Adorable Newborn Baby Giggle on Clicks!
-  public playBabyGiggle() {
+  // 2. Normal, Sweet, Gentle Cute Click Sound (Soft Marimba / Chime Tap)
+  // Low volume (gain 0.065), quiet, warm, and delicate - not loud!
+  public playClick() {
     if (this.isMuted) return;
-
-    if (!this.hasLoadedGiggles) {
-      this.loadGiggles();
-    }
-
     const ctx = this.getContext();
-    this.giggleCycle = (this.giggleCycle + 1) % 4;
+    if (!ctx) return;
 
-    // 1. Play with Web Audio if buffer is ready (zero latency, smooth volume)
-    if (ctx && this.giggleBuffers.length > 0) {
-      try {
-        const buf = this.giggleBuffers[this.giggleCycle % this.giggleBuffers.length];
-        const source = ctx.createBufferSource();
-        source.buffer = buf;
-        const gain = ctx.createGain();
-        // Ultra-gentle, soft, velvety volume (0.42) - sweet, adorable and delicate for baby ears
-        gain.gain.setValueAtTime(0.42, ctx.currentTime);
-        source.connect(gain);
-        gain.connect(ctx.destination);
-        source.start(0);
-        return;
-      } catch {
-        // Fall through to HTMLAudioElements
-      }
-    }
+    const now = ctx.currentTime;
+    // Pleasant pentatonic notes that cycle softly
+    const clickNotes = [523.25, 587.33, 659.25, 698.46, 783.99]; // C5, D5, E5, F5, G5
+    this.clickCycle = (this.clickCycle + 1) % clickNotes.length;
+    const freq = clickNotes[this.clickCycle];
 
-    // 2. Play with HTMLAudioElement
-    if (this.giggleAudioElements.length > 0) {
-      try {
-        const el = this.giggleAudioElements[this.giggleCycle % this.giggleAudioElements.length];
-        if (el) {
-          el.currentTime = 0;
-          el.volume = 0.42;
-          el.play().catch(() => {});
-          return;
-        }
-      } catch {
-        // Fall through
-      }
-    }
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    const filter = ctx.createBiquadFilter();
 
-    // 3. Gentle sweet chime fallback if audio assets are blocked
-    this.playChime(523.25, 0.4);
+    filter.type = "lowpass";
+    filter.frequency.setValueAtTime(1400, now);
+
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(freq, now);
+    osc.frequency.exponentialRampToValueAtTime(freq * 0.95, now + 0.09);
+
+    // Very gentle, quiet volume (0.065) - not loud, sweet and cute
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.linearRampToValueAtTime(0.065, now + 0.008);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.09);
+
+    osc.connect(filter);
+    filter.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc.start(now);
+    osc.stop(now + 0.09);
   }
 
-  // Alias for soft baby coo and jiggle
+  // Aliases for compatibility - all cleanly route to the cute quiet click
+  public playBabyGiggle() {
+    this.playClick();
+  }
+
   public playBabyCoo() {
-    this.playBabyGiggle();
+    this.playClick();
   }
 
   public playBabyJiggle() {
-    this.playBabyGiggle();
+    this.playClick();
   }
 
   // 3. Gentle Soft Bubble Pop
@@ -460,9 +410,6 @@ class SoundEngine {
     oscHarmonic.stop(ctx.currentTime + duration);
   }
 
-  public playClick() {
-    this.playBabyGiggle();
-  }
 
   // 6. Play Lullaby with Looping Support
   public playLullaby(songId: string = "twinkle") {

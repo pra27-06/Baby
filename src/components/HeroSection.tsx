@@ -131,12 +131,12 @@ export function HeroSection() {
     setTimeout(() => setIsJigglingHard(false), 900);
 
     const giggleTexts = [
-      "Hee hee! (≧◡≦)",
-      "He-he-ha! ✨",
-      "Tickles! 💖",
-      "Aww! Giggles! ☁️",
-      "Giggle giggle! ★",
-      "Coo-coo! 🌸",
+      "Sweet dreams! ✨",
+      "So cozy! ☁️",
+      "Warm & gentle! 💖",
+      "Starlight! ★",
+      "Sleep tight! 🌙",
+      "Peaceful! 🌸",
     ];
     const newGiggle: FloatingGiggle = {
       id: Date.now() + Math.random(),
@@ -304,40 +304,6 @@ export function HeroSection() {
               className="absolute bottom-2 w-64 h-24 bg-white/95 dark:bg-[#1c182d]/90 rounded-full blur-sm pointer-events-none"
             />
 
-            {/* Cute Interactive Baby Doodles around the Cloud */}
-            <button
-              onClick={() => sound.playBabyCoo()}
-              className="absolute -top-3 -left-4 z-20 text-3xl p-2 rounded-2xl bg-[#fff0f5]/90 dark:bg-[#2a2238]/90 border-2 border-[#fbcfe8] shadow-md hover:scale-130 active:scale-95 transition-all cursor-pointer animate-wiggle"
-              title="Pip's warm milk bottle! 🍼"
-              aria-label="Baby milk bottle doodle"
-            >
-              🍼
-            </button>
-            <button
-              onClick={() => sound.playBabyCoo()}
-              className="absolute -top-4 -right-4 z-20 text-3xl p-2 rounded-2xl bg-[#fefce8]/90 dark:bg-[#2a2238]/90 border-2 border-[#fef08a] shadow-md hover:scale-130 active:scale-95 transition-all cursor-pointer animate-pulse"
-              title="Bedtime Star! ⭐"
-              aria-label="Twinkle star doodle"
-            >
-              ⭐
-            </button>
-            <button
-              onClick={() => sound.playBabyCoo()}
-              className="absolute -bottom-6 -right-6 z-20 text-3xl p-2 rounded-2xl bg-[#fdf2f8]/90 dark:bg-[#2a2238]/90 border-2 border-[#fbcfe8] shadow-md hover:scale-130 active:scale-95 transition-all cursor-pointer animate-bounce"
-              title="Cuddly Teddy Bear! 🧸"
-              aria-label="Teddy bear doodle"
-            >
-              🧸
-            </button>
-            <button
-              onClick={() => sound.playBabyCoo()}
-              className="absolute -bottom-6 -left-6 z-20 text-3xl p-2 rounded-2xl bg-[#eff6ff]/90 dark:bg-[#2a2238]/90 border-2 border-[#bae6fd] shadow-md hover:scale-130 active:scale-95 transition-all cursor-pointer animate-pulse"
-              title="Heart Balloon! 🎈"
-              aria-label="Heart balloon doodle"
-            >
-              🎈
-            </button>
-
             {/* Movable & Jiggly Baby Wrapper */}
             <div
               onMouseDown={handleMouseDown}
@@ -349,10 +315,10 @@ export function HeroSection() {
               style={{
                 transform: `translate(${dragOffset.x}px, ${dragOffset.y}px)`,
               }}
-              title="Click to hear Pip giggle! Drag me around the cloud!"
+              title="Tap Pip! Drag me around the cloud!"
               role="button"
               tabIndex={0}
-              aria-label="Interactive movable baby Pip. Click to make Pip laugh, or drag around."
+              aria-label="Interactive movable baby Pip. Tap for gentle chime, or drag around."
             >
               <Image
                 src="/assets/pip_avatar_cloud.png"
@@ -396,7 +362,7 @@ export function HeroSection() {
               <Hand size={12} /> Drag me around!
             </span>
             <span className="inline-flex items-center gap-1 text-[11px] font-bold bg-[#fef9c3] dark:bg-[#342e1a] text-[#854d0e] dark:text-[#ffd166] px-3 py-1 rounded-full border border-[#fef08a]/50 shadow-sm">
-              <Sparkles size={12} /> Click me to hear cute baby giggles!
+              <Sparkles size={12} /> Tap me for cute bedtime chimes!
             </span>
           </div>
         </div>
